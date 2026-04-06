@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Teacher {
+  id            Int              @id @default(autoincrement())
+  email         String           @unique
+  createdAt     DateTime         @default(now())
+  registrations TeacherStudent[]
+
+  @@map("teachers")
+}
+
+model Student {
+  id            Int              @id @default(autoincrement())
+  email         String           @unique
+  suspended     Boolean          @default(false)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  registrations TeacherStudent[]
+
+  @@map("students")
+}
+
+model TeacherStudent {
+  teacherId Int
+  studentId Int
+  teacher   Teacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@id([teacherId, studentId])
+  @@index([studentId])
+  @@map("teacher_students")
+}

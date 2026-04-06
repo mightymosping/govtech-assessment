@@ -1,0 +1,16 @@
+subscription_id          = "00000000-0000-0000-0000-000000000000"
+location                 = "southeastasia"
+resource_group_name      = "rg-your-name"
+name_prefix              = "your-name-govtech-assess-"
+
+container_image          = "docker.io/your-dockerhub-namespace/teacher-administration-api:latest"
+container_port           = 80
+docker_registry_server   = "index.docker.io"
+docker_registry_username = "your-dockerhub-username"
+docker_registry_password = "replace-me-with-a-dockerhub-token"
+
+mysql_admin_username     = "mysqladmin"
+mysql_database_name      = "teacheradministration"
+mysql_sku_name           = "B_Standard_B1ms"
+mysql_public_access_enabled = false
+mysql_allowed_ip_addresses  = ["0.0.0.0"]
