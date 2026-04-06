@@ -384,10 +384,3 @@ pnpm lint
 pnpm test
 pnpm test:coverage
 ```
-
-## Supporting Docs
-
-- `docs/architecture.md` for architecture notes and decisions
-- `docs/contract.md` for the original API contract summary
-- `postman/teacher-administration-api.postman_collection.json` for ready-to-run API requests
-- `postman/local.postman_environment.json` for the local Postman environment
