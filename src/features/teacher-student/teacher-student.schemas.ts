@@ -69,6 +69,15 @@ const teacherQuerySchema = z
       .filter((teacher) => teacher.length > 0);
   })
   .superRefine((teachers, context) => {
+    if (teachers.length === 0) {
+      context.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: 'Must contain at least one teacher',
+      });
+
+      return;
+    }
+
     if (teachers.some((teacher) => !emailPattern.test(teacher))) {
       context.addIssue({
         code: z.ZodIssueCode.custom,

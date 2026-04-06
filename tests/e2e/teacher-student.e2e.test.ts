@@ -73,20 +73,21 @@ describe('teacher-student e2e', () => {
     });
   });
 
-  it('returns an empty list for common students when no teacher query is provided', async () => {
-    const teacherStudentService = createTeacherStudentService();
-    teacherStudentService.retrieveCommonStudents.mockResolvedValue([]);
-    const app = createApp({ teacherStudentService });
+  it('returns a validation error for common students when no teacher query is provided', async () => {
+    const app = createApp({
+      teacherStudentService: createTeacherStudentService(),
+    });
 
     const response = await request(app).get('/api/commonstudents');
 
-    expect(response.status).toBe(200);
+    expect(response.status).toBe(400);
     expect(response.body).toEqual({
-      students: [],
+      errors: {
+        teacher: ['Must contain at least one teacher'],
+      },
+      message: 'Validation errors',
+      status: 400,
     });
-    expect(teacherStudentService.retrieveCommonStudents).toHaveBeenCalledWith(
-      [],
-    );
   });
 
   it('returns recipients for notifications', async () => {

@@ -83,9 +83,13 @@ describe('teacher-student schemas', () => {
     });
   });
 
-  it('returns an empty teacher array for common students when the query is absent', async () => {
-    await expect(commonStudentsQuerySchema.parseAsync({})).resolves.toEqual({
-      teacher: [],
+  it('returns the common students missing teacher message', async () => {
+    await expect(commonStudentsQuerySchema.parseAsync({})).rejects.toMatchObject({
+      issues: [
+        expect.objectContaining({
+          message: 'Must contain at least one teacher',
+        }),
+      ],
     });
   });
 
