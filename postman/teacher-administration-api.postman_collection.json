@@ -1,0 +1,382 @@
+{
+  "info": {
+    "_postman_id": "8d5752df-9b57-4de9-a28a-1f456f2a3d0f",
+    "name": "Teacher Administration API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Postman collection for the Teacher Administration API endpoints implemented in Story 002."
+  },
+  "item": [
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Get Health",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('status is 200', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const body = pm.response.json();",
+                  "",
+                  "pm.test('health payload shape is correct', function () {",
+                  "  pm.expect(body.status).to.eql('ok');",
+                  "  pm.expect(body.database).to.eql('up');",
+                  "  pm.expect(body.timestamp).to.be.a('string');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/health",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Teacher Student",
+      "item": [
+        {
+          "name": "Register Students",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('status is 204', function () {",
+                  "  pm.response.to.have.status(204);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teacher\": \"{{teacherEmail}}\",\n  \"students\": [\n    \"{{studentOneEmail}}\",\n    \"{{studentTwoEmail}}\"\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "register"]
+            }
+          }
+        },
+        {
+          "name": "Register Validation Error",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('status is 400', function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "const body = pm.response.json();",
+                  "",
+                  "pm.test('register validation message is correct', function () {",
+                  "  pm.expect(body.message).to.eql('Validation errors');",
+                  "  pm.expect(body.errors.teacher).to.include('Teacher is missing');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"students\": [\n    \"{{studentOneEmail}}\"\n  ]\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/register",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "register"]
+            }
+          }
+        },
+        {
+          "name": "Get Common Students",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('status is 200', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const body = pm.response.json();",
+                  "",
+                  "pm.test('common students payload shape is correct', function () {",
+                  "  pm.expect(body.students).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/commonstudents?teacher={{teacherEmail}}&teacher={{secondTeacherEmail}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "commonstudents"],
+              "query": [
+                {
+                  "key": "teacher",
+                  "value": "{{teacherEmail}}"
+                },
+                {
+                  "key": "teacher",
+                  "value": "{{secondTeacherEmail}}"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Common Students Without Teacher",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('status is 200', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const body = pm.response.json();",
+                  "",
+                  "pm.test('no teacher returns empty list', function () {",
+                  "  pm.expect(body.students).to.eql([]);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/commonstudents",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "commonstudents"]
+            }
+          }
+        },
+        {
+          "name": "Suspend Student",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('status is 204', function () {",
+                  "  pm.response.to.have.status(204);",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"student\": \"{{studentOneEmail}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/suspend",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "suspend"]
+            }
+          }
+        },
+        {
+          "name": "Suspend Validation Error",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('status is 400', function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "const body = pm.response.json();",
+                  "",
+                  "pm.test('suspend validation message is correct', function () {",
+                  "  pm.expect(body.message).to.eql('Validation errors');",
+                  "  pm.expect(body.errors.student).to.include('Student is missing');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/suspend",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "suspend"]
+            }
+          }
+        },
+        {
+          "name": "Retrieve For Notifications",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('status is 200', function () {",
+                  "  pm.response.to.have.status(200);",
+                  "});",
+                  "",
+                  "const body = pm.response.json();",
+                  "",
+                  "pm.test('notification payload shape is correct', function () {",
+                  "  pm.expect(body.recipients).to.be.an('array');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teacher\": \"{{teacherEmail}}\",\n  \"notification\": \"Hello students @{{studentOneEmail}} @{{studentThreeEmail}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/retrievefornotifications",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "retrievefornotifications"]
+            }
+          }
+        },
+        {
+          "name": "Retrieve For Notifications Validation Error",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('status is 400', function () {",
+                  "  pm.response.to.have.status(400);",
+                  "});",
+                  "",
+                  "const body = pm.response.json();",
+                  "",
+                  "pm.test('notification validation message is correct', function () {",
+                  "  pm.expect(body.message).to.eql('Validation errors');",
+                  "  pm.expect(body.errors.notification).to.include('Notification is missing');",
+                  "});"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"teacher\": \"{{teacherEmail}}\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/retrievefornotifications",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "retrievefornotifications"]
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:80"
+    },
+    {
+      "key": "teacherEmail",
+      "value": "teacherken@example.com"
+    },
+    {
+      "key": "secondTeacherEmail",
+      "value": "teacherjoe@example.com"
+    },
+    {
+      "key": "studentOneEmail",
+      "value": "studentagnes@example.com"
+    },
+    {
+      "key": "studentTwoEmail",
+      "value": "studenthonor@example.com"
+    },
+    {
+      "key": "studentThreeEmail",
+      "value": "studentmarie@example.com"
+    }
+  ]
+}
